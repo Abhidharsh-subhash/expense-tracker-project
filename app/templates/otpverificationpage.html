@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OTP Verification</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Arial", sans-serif;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(135deg, light skyblue, skyblue);
+      }
+
+      .container {
+        background: white;
+        border-radius: 10px;
+        padding: 40px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 90%;
+        max-width: 400px;
+      }
+
+      h1 {
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      p {
+        margin-bottom: 20px;
+        color: #666;
+      }
+
+      .otp-inputs {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+
+      .otp {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+        text-align: center;
+        border: 2px solid #3a7bd5;
+        border-radius: 5px;
+        transition: border-color 0.3s;
+      }
+
+      .otp:focus {
+        border-color: #67b7f9;
+        outline: none;
+      }
+
+      .verify-button {
+        background-color: royalblue;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+      }
+
+      .verify-button:hover {
+        background-color: #67b7f9;
+      }
+
+      .resend-otp {
+        margin-top: 15px;
+        color: #3a7bd5;
+      }
+
+      .resend-otp a {
+        color: skyblue;
+        text-decoration: none;
+      }
+
+      .resend-otp a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>OTP Verification</h1>
+      <p>Please enter the OTP sent to your registered mobile number.</p>
+      <div class="otp-inputs">
+        <input
+          type="text"
+          maxlength="1"
+          class="otp"
+          oninput="moveFocus(this, 1)"
+        />
+        <input
+          type="text"
+          maxlength="1"
+          class="otp"
+          oninput="moveFocus(this, 1)"
+        />
+        <input
+          type="text"
+          maxlength="1"
+          class="otp"
+          oninput="moveFocus(this, 1)"
+        />
+        <input
+          type="text"
+          maxlength="1"
+          class="otp"
+          oninput="moveFocus(this, 1)"
+        />
+      </div>
+      <button class="verify-button" onclick="verifyOTP()">Verify OTP</button>
+      <p class="resend-otp">Didn't receive the OTP? <a href="#">Resend</a></p>
+    </div>
+    <script>
+      function moveFocus(currentInput, increment) {
+          const inputs = document.querySelectorAll('.otp');
+          const index = Array.from(inputs).indexOf(currentInput);
+
+          if (currentInput.value.length === 1 && index < inputs.length - 1) {
+              inputs[index + increment].focus();
+          } else if (currentInput.value.length === 0 && index > 0) {
+              inputs[index - 1].focus();
+          }
+      }
+
+      function verifyOTP() {
+          const inputs = document.querySelectorAll('.otp');
+          const otp = Array.from(inputs).map(input => input.value).join('');
+
+          if (otp.length === 4) {
+              alert(OTP Entered: ${otp});
+              // Proceed with verification
+          } else {
+              alert('Please enter a valid OTP');
+          }
+      }
+    </script>
+  </body>
+</html>

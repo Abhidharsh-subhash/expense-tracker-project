@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker Warning</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 125px;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            padding: 40px;
+            background: white;
+            color: #f10f0f;
+            border: 4px solid #17c4db;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #7fe000;
+        }
+
+        button {
+            width: 90%;
+            padding: 10px;
+            margin: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #warningMessage {
+            color: rgb(255, 0, 0);
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1> EXPENSE TRACKER WARNING!</h1>
+        <input type="number" id="expenseInput" placeholder="Enter your expense" />
+        <button id="addExpense">Add Expense</button>
+        <div id="totalExpenses">Total Expenses: $0</div>
+        <div id="warningMessage" class="hidden">WARNING: You have exceeded your budget!</div>
+    </div>
+    <script>
+        let totalExpenses = 0;
+        const budgetLimit = 100; // Set your budget limit here
+
+        document.getElementById('addExpense').addEventListener('click', function() {
+            const expenseInput = document.getElementById('expenseInput').value;
+            const expense = parseFloat(expenseInput);
+
+            if (!isNaN(expense) && expense > 0) {
+                totalExpenses += expense;
+                document.getElementById('totalExpenses').innerText = Total Expenses: $${totalExpenses.toFixed(2)};
+                document.getElementById('expenseInput').value = '';
+
+                if (totalExpenses > budgetLimit) {
+                    document.getElementById('warningMessage').classList.remove('hidden');
+                } else {
+                    document.getElementById('warningMessage').classList.add('hidden');
+                }
+            } else {
+                alert('Please enter a valid expense.');
+            }
+        });
+    </script>
+</body>
+</html>
