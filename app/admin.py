@@ -8,3 +8,7 @@ from . import models
 class Users(admin.ModelAdmin):
     list_display = ("username", "email",)
     exclude = ("password",)
+
+
+admin.site.register(models.Expnese)
+admin.site.register(models.Income)

@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Users, Income, Expnese
+import json
+from django.db.models import Sum
 
 # Create your views here.
 
@@ -9,8 +11,27 @@ def index(request):
 
 
 def homepage(request):
-    msg = request.GET.get("msg", "")
-    return render(request, 'homepage.html', {"msg": msg})
+    user = Users.objects.get(id=request.session.get('id'))
+    income_data = Income.objects.filter(user=user).values(
+        'month').annotate(total_income=Sum('amount')).order_by('month')
+    expense_data = Expnese.objects.filter(user=user).values(
+        'month').annotate(total_expense=Sum('amount')).order_by('month')
+    income_months = [data['month'] for data in income_data]
+    income_amounts = [data['total_income'] for data in income_data]
+    expense_months = [data['month'] for data in expense_data]
+    expense_amounts = [data['total_expense'] for data in expense_data]
+    # income_months_example = ['January', 'February', 'March']  # Example data
+    # income_amounts_example = [500, 700, 800]  # Example data
+    # expense_months_example = ['January', 'February', 'March']  # Example data
+    # expense_amounts_example = [300, 450, 600]  # Example data
+    context = {
+        'msg': request.GET.get("msg", ""),
+        'income_months': json.dumps(income_months),
+        'income_amounts': json.dumps(income_amounts),
+        'expense_months': json.dumps(expense_months),
+        'expense_amounts': json.dumps(expense_amounts),
+    }
+    return render(request, 'homepage.html', context)
 
 
 def otpverificationpage(request):
@@ -57,7 +78,8 @@ def add_income(request):
 
 def addexpensepage(request):
     msg = request.GET.get("msg", "")
-    expenses = Expnese.objects.filter(id=request.session.get('id'))
+    user = Users.objects.get(id=request.session.get('id'))
+    expenses = Expnese.objects.filter(user=user).all()
     return render(request, "addexpensepage.html", {"msg": msg, 'expenses': expenses})
 
 
@@ -67,7 +89,8 @@ def addexpense(request):
         amount = request.POST['amount']
         note = request.POST['note']
         user = Users.objects.get(id=request.session.get('id'))
-        Expnese.objects.create(user=user, month=month, amount=amount, note=note)
+        Expnese.objects.create(user=user, month=month,
+                               amount=amount, note=note)
         return redirect("/addexpensepage?msg=Expense added successfully")
     return redirect("/addexpensepage?msg=Please try again")
 
