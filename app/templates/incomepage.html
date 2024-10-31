@@ -77,6 +77,11 @@
       margin-top: 20px; /* Space above the table */
     }
   </style>
+  {% if msg != "" and msg != null %}
+  <script>
+    alert("{{msg}}");
+  </script>
+  {% endif %}
 </head>
 <body>
   <!-- Header Section -->
@@ -93,7 +98,7 @@
             <b><a class="nav-link" href="{% url 'homepage' %}">Home</a></b>
           </li>
           <li class="nav-item">
-            <b><a class="nav-link" href="#budget">Income</a></b>
+            <b><a class="nav-link" href="{% url 'incomepage' %}">Income</a></b>
           </li>
           <li class="nav-item">
             <b><a class="nav-link" href="{% url 'addexpensepage' %}">Expenses</a></b>
@@ -116,10 +121,11 @@
     <!-- Budget Form -->
     <div class="form-container">
       <h3 class="text-center">Add Income</h3>
-      <form id="budgetForm" onsubmit="addBudget(event)">
+      <form id="budgetForm" method="post" action="{% url 'add_income' %}">
+        {% csrf_token %}
         <div class="mb-3">
           <label for="month" class="form-label">Select Month</label>
-          <select class="form-select" id="month" required>
+          <select class="form-select" id="month" name="month" required>
             <option value="">Choose a month</option>
             <option value="January">January</option>
             <option value="February">February</option>
@@ -137,7 +143,7 @@
         </div>
         <div class="mb-3">
           <label for="budgetAmount" class="form-label">Income Amount of month</label>
-          <input type="number" class="form-control" id="budgetAmount" placeholder="Enter income amount" required>
+          <input type="number" name="amount" class="form-control" id="budgetAmount" placeholder="Enter income amount" required>
         </div>
         <button type="submit" class="btn btn-success w-100">Add Income</button>
       </form>
@@ -154,18 +160,12 @@
           </tr>
         </thead>
         <tbody>
+          {% for i in incomes %}
           <tr>
-            <td class="text-center">January</td>
-            <td class="text-center">1500</td>
+            <td class="text-center">{{i.month}}</td>
+            <td class="text-center">{{i.amount}}</td>
           </tr>
-          <tr>
-            <td class="text-center">February</td>
-            <td class="text-center">1200</td>
-          </tr>
-          <tr>
-            <td class="text-center">March</td>
-            <td class="text-center">800</td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>

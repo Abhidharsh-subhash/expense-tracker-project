@@ -88,6 +88,11 @@
       margin: 20px 0; /* Space between form and list */
     }
   </style>
+  {% if msg != "" and msg != null %}
+  <script>
+    alert("{{msg}}");
+  </script>
+  {% endif %}
 </head>
 <body>
   <!-- Header Section -->
@@ -104,7 +109,7 @@
             <b><a class="nav-link" href="{% url 'homepage' %}">Home</a></b>
           </li>
           <li class="nav-item">
-            <b><a class="nav-link" href="#budget">Income</a></b>
+            <b><a class="nav-link" href="{% url 'incomepage' %}">Income</a></b>
           </li>
           <li class="nav-item">
             <b><a class="nav-link" href="#expenses">Expenses</a></b>
@@ -127,10 +132,11 @@
     <!-- Expense Form -->
     <div class="form-container">
       <h3 class="text-center">Add Expense</h3>
-      <form id="expenseForm" onsubmit="addExpense(event)">
+      <form id="expenseForm" method="post" action="{% url 'addexpense' %}">
+        {% csrf_token %}
         <div class="mb-3">
           <label for="expenseMonth" class="form-label">Select Month</label>
-          <select class="form-select" id="expenseMonth" required>
+          <select class="form-select" id="expenseMonth" name="month" required>
             <option value="">Choose a month</option>
             <option value="January">January</option>
             <option value="February">February</option>
@@ -146,17 +152,17 @@
             <option value="December">December</option>
           </select>
         </div>
-        <div class="mb-3">
+        <!-- <div class="mb-3">
           <label for="expenseDate" class="form-label">Expense Date</label>
           <input type="date" class="form-control" id="expenseDate" required>
-        </div>
+        </div> -->
         <div class="mb-3">
           <label for="expenseAmount" class="form-label">Expense Amount</label>
-          <input type="number" class="form-control" id="expenseAmount" placeholder="Enter expense amount" required>
+          <input type="number" class="form-control" name="amount" id="expenseAmount" placeholder="Enter expense amount" required>
         </div>
         <div class="mb-3">
           <label for="expenseNotes" class="form-label">Notes</label>
-          <textarea class="form-control" id="expenseNotes" rows="3" placeholder="Enter any notes"></textarea>
+          <textarea class="form-control" id="expenseNotes" name="note" rows="3" placeholder="Enter any notes"></textarea>
         </div>
         <button type="submit" class="btn btn-danger w-100">Add Expense</button>
       </form>
@@ -189,13 +195,18 @@
         <thead>
           <tr>
             <th scope="col" class="text-center">Month</th>
-            <th scope="col" class="text-center">Date</th>
             <th scope="col" class="text-center">Expense Amount (₹)</th>
             <th scope="col" class="text-center">Notes</th>
           </tr>
         </thead>
         <tbody>
-          <!-- Dynamic content will be added here -->
+          {% for i in expenses %}
+          <tr>
+            <td>{{i.month}}</td>
+            <td>{{i.amount}}</td>
+            <td>{{i.note}}</td>
+          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>

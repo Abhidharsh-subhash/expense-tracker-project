@@ -17,5 +17,8 @@ urlpatterns = [
     path('confirm_email', views.confirm_email, name='confirm_email'),
     path('setpassword', views.setpassword, name='setpassword'),
     path('addexpensepage', views.addexpensepage, name='addexpensepage'),
-    path('profilepage', views.profilepage, name='profilepage')
+    path('profilepage', views.profilepage, name='profilepage'),
+    path('update_profile', views.update_profile, name='update_profile'),
+    path('add_income', views.add_income, name='add_income'),
+    path('addexpense', views.addexpense, name='addexpense')
 ]

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Users
+from .models import Users, Income, Expnese
 
 # Create your views here.
 
@@ -37,17 +37,62 @@ def signup(request):
 
 def incomepage(request):
     msg = request.GET.get("msg", "")
-    return render(request, 'incomepage.html', {"msg": msg})
+    incomes = Income.objects.filter(user=request.session.get('id'))
+    return render(request, 'incomepage.html', {"msg": msg, 'incomes': incomes})
+
+
+def add_income(request):
+    if request.POST:
+        month = request.POST['month']
+        amount = request.POST['amount']
+        if request.session.get('id'):
+            user = Users.objects.get(id=request.session.get('id'))
+            if Income.objects.filter(user=user, month=month).exists():
+                return redirect('/incomepage?msg=Income for this month already exists')
+            Income.objects.create(user=user, month=month, amount=amount)
+            return redirect('/incomepage?msg=Income added successfully')
+        return redirect('/loginpage?msg=Please try again.')
+    return redirect('/loginpage?msg=Something went wrong')
 
 
 def addexpensepage(request):
     msg = request.GET.get("msg", "")
-    return render(request, "addexpensepage.html", {"msg": msg})
+    expenses = Expnese.objects.filter(id=request.session.get('id'))
+    return render(request, "addexpensepage.html", {"msg": msg, 'expenses': expenses})
+
+
+def addexpense(request):
+    if request.POST:
+        month = request.POST['month']
+        amount = request.POST['amount']
+        note = request.POST['note']
+        user = Users.objects.get(id=request.session.get('id'))
+        Expnese.objects.create(user=user, month=month, amount=amount, note=note)
+        return redirect("/addexpensepage?msg=Expense added successfully")
+    return redirect("/addexpensepage?msg=Please try again")
 
 
 def profilepage(request):
     msg = request.GET.get("msg", "")
-    return render(request, 'profilepage.html', {'msg': msg})
+    if request.session.get('email'):
+        user = Users.objects.get(id=request.session.get('id'))
+        return render(request, 'profilepage.html', {'msg': msg, 'user': user})
+    return redirect('loginpage?msg=Something went wrong! Try again.')
+
+
+def update_profile(request):
+    if request.POST:
+        username = request.POST['username']
+        email = request.POST['email']
+        try:
+            user_id = request.session.get('id')
+            Users.objects.filter(id=user_id).update(
+                username=username, email=email)
+            return redirect('/profilepage?msg=Profile updated successfully')
+        except Exception as e:
+            print(e)
+            return redirect('loginpage?msg=Something went wrong! Try again.')
+    return redirect('loginpage?msg=Something went wrong! Try again.!')
 
 
 def addingbudgetpage(request):
