@@ -35,9 +35,19 @@ def signup(request):
     return redirect('/signuppage?msg=Please signup again!')
 
 
-def budgetpage(request):
+def incomepage(request):
     msg = request.GET.get("msg", "")
-    return render(request, 'budgetpage.html', {"msg": msg})
+    return render(request, 'incomepage.html', {"msg": msg})
+
+
+def addexpensepage(request):
+    msg = request.GET.get("msg", "")
+    return render(request, "addexpensepage.html", {"msg": msg})
+
+
+def profilepage(request):
+    msg = request.GET.get("msg", "")
+    return render(request, 'profilepage.html', {'msg': msg})
 
 
 def addingbudgetpage(request):
