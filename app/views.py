@@ -79,8 +79,12 @@ def add_income(request):
 def addexpensepage(request):
     msg = request.GET.get("msg", "")
     user = Users.objects.get(id=request.session.get('id'))
-    expenses = Expnese.objects.filter(user=user).all()
-    return render(request, "addexpensepage.html", {"msg": msg, 'expenses': expenses})
+    month_filter = request.GET.get("month", "")
+    if month_filter:
+        expenses = Expnese.objects.filter(user=user, month=month_filter)
+    else:
+        expenses = Expnese.objects.filter(user=user)
+    return render(request, "addexpensepage.html", {"msg": msg, 'expenses': expenses, "selected_month": month_filter})
 
 
 def addexpense(request):

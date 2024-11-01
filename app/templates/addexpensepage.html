@@ -97,7 +97,7 @@
 <body>
   <!-- Header Section -->
   <div class="header">
-    Budget & Expense Tracker
+    Expense Tracker
   </div>
 
   <!-- Navbar Section -->
@@ -177,8 +177,8 @@
         <label for="filterMonth" class="form-label">Filter by Month</label>
         <select class="form-select" id="filterMonth" onchange="filterExpenses()">
           <option value="">All Months</option>
-          <option value="January">January</option>
-          <option value="February">February</option>
+          <option value="January" {% if selected_month == "January" %}selected{% endif %}>January</option>
+          <option value="February" {% if selected_month == "February" %}selected{% endif %}>February</option>
           <option value="March">March</option>
           <option value="April">April</option>
           <option value="May">May</option>
@@ -252,27 +252,10 @@
         tableBody.appendChild(row);
       });
     }
-
     function filterExpenses() {
       const selectedMonth = document.getElementById("filterMonth").value;
-      const filteredExpenses = selectedMonth
-        ? expenseList.filter(expense => expense.month === selectedMonth)
-        : expenseList;
-
-      const tableBody = document.querySelector("#expenseTable tbody");
-      tableBody.innerHTML = ""; // Clear existing table rows
-
-      filteredExpenses.forEach((expense, index) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td class="text-center">${expense.month}</td>
-          <td class="text-center">${expense.date}</td>
-          <td class="text-center">${expense.amount.toFixed(2)}</td>
-          <td class="text-center">${expense.amountUsed.toFixed(2)}</td>
-          <td class="text-center">${expense.notes}</td>
-        `;
-        tableBody.appendChild(row);
-      });
+      console.log(selectedMonth)
+      window.location.href = `{% url 'addexpensepage' %}?month=${selectedMonth}`; // Redirect with month filter
     }
   </script>
 </body>
